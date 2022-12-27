@@ -17,6 +17,12 @@ class String
   end
 end
 
+class Array
+  def split_by(&pred)
+    self.chunk(&pred).select { !_1[0] }.map { _1[1] }.to_a
+  end
+end
+
 class P2
   attr_accessor :row, :col
   def y
@@ -60,8 +66,13 @@ class P2
     P2.new(self.row <=> 0, self.col <=> 0)
   end
 
-  def adjacent(map)
-    ADJACENT.map {|p|
+  def adjacent(map, diag = false)
+    l = if diag
+          ADJACENT.concat DIAG
+        else
+          ADJACENT
+        end
+    l.map {|p|
       p = self + p
       if p.row < 0 || p.col < 0
         nil
@@ -74,11 +85,18 @@ class P2
   end
 end
 
+
 ADJACENT = [
   P2.new(0,1),
   P2.new(0,-1),
   P2.new(1,0),
   P2.new(-1,0),
+]
+DIAG = [
+  P2.new(1,1),
+  P2.new(-1,-1),
+  P2.new(-1,1),
+  P2.new(1,-1),
 ]
 
 class Queue2
